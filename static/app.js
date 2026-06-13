@@ -8,6 +8,11 @@ const state = {
   sampleBracket: [],
   modalChampion: "",
   backtest: null,
+  /* Admin gate: tracks whether live-result editing is locked and unlocked. */
+  adminLocked: false,
+  adminUnlocked: false,
+  adminKey: "",
+  selectsReady: false,
 };
 
 /*
@@ -611,6 +616,101 @@ async function loadLiveResults() {
   }
 }
 
+async function initAdminGate() {
+  /*
+    Ask the server whether live-result editing is locked behind an admin key.
+    When locked, viewers see the results but the Save controls are disabled until
+    the owner unlocks with the key. The key is kept only in memory for this tab,
+    and also remembered in localStorage so the owner does not re-enter it each visit.
+  */
+  try {
+    const res = await fetch("/api/admin-status");
+    if (!res.ok) return;
+    const { locked } = await res.json();
+    state.adminLocked = !!locked;
+
+    if (!locked) {
+      // Open deployment (or local dev): editing is freely allowed.
+      state.adminUnlocked = true;
+      return;
+    }
+
+    // Try a remembered key so the owner stays unlocked across visits.
+    const saved = localStorage.getItem("wc-admin-key") || "";
+    if (saved) {
+      const ok = await verifyAdminKey(saved);
+      if (ok) return; // verifyAdminKey sets the unlocked state and key.
+    }
+    // Still locked: reflect that in the UI so viewers know it is read-only.
+    applyAdminUiState();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function verifyAdminKey(key) {
+  /* Confirm a key with the server before trusting it for writes. */
+  try {
+    const res = await fetch("/api/admin-verify", {
+      method: "POST",
+      headers: { "X-Admin-Key": key },
+    });
+    const data = await res.json();
+    if (data.ok) {
+      state.adminKey = key;
+      state.adminUnlocked = true;
+      localStorage.setItem("wc-admin-key", key);
+      applyAdminUiState();
+      return true;
+    }
+    return false;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+}
+
+function applyAdminUiState() {
+  /*
+    Enable or disable the Save controls based on unlock state. Viewers keep a
+    clean read-only view; the owner gets the full editing controls plus an
+    "unlocked" cue. An unlock button appears when locked and not yet unlocked.
+  */
+  const locked = state.adminLocked && !state.adminUnlocked;
+  if (liveAddBtnEl) liveAddBtnEl.disabled = locked;
+  if (liveHomeEl) liveHomeEl.disabled = locked;
+  if (liveAwayEl) liveAwayEl.disabled = locked;
+  if (liveHomeScoreEl) liveHomeScoreEl.disabled = locked;
+  if (liveAwayScoreEl) liveAwayScoreEl.disabled = locked;
+
+  // Show an unlock prompt only when editing is locked.
+  let gate = document.getElementById("adminGate");
+  if (locked) {
+    if (!gate) {
+      gate = document.createElement("div");
+      gate.id = "adminGate";
+      gate.className = "admin-gate";
+      gate.innerHTML = `
+        <span>Editing results is owner-only.</span>
+        <button type="button" id="adminUnlockBtn" class="admin-unlock">Unlock</button>
+      `;
+      // Place the gate just above the entry controls.
+      liveStatusEl.parentNode.insertBefore(gate, liveStatusEl);
+      document.getElementById("adminUnlockBtn").addEventListener("click", promptAdminUnlock);
+    }
+  } else if (gate) {
+    gate.remove();
+  }
+}
+
+async function promptAdminUnlock() {
+  /* Simple prompt keeps the unlock flow lightweight for a single owner. */
+  const key = prompt("Enter the owner key to edit live results:");
+  if (!key) return;
+  const ok = await verifyAdminKey(key.trim());
+  if (!ok) alert("That key was not correct.");
+}
+
 async function addLiveResult() {
   /* Saving a real score rebuilds the whole model server-side, so we reload predictions after. */
   const home = liveHomeEl.value;
@@ -629,10 +729,15 @@ async function addLiveResult() {
   try {
     const res = await fetch("/api/live-results", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      /* Send the admin key so the server authorizes this write. */
+      headers: { "Content-Type": "application/json", "X-Admin-Key": state.adminKey || "" },
       body: JSON.stringify({ home, away, home_score: homeScore, away_score: awayScore }),
     });
 
+    if (res.status === 401) {
+      liveStatusEl.textContent = "Editing is owner-only. Unlock with the owner key first.";
+      return;
+    }
     if (!res.ok) {
       liveStatusEl.textContent = "Could not apply that result. Check the teams.";
       return;
@@ -655,7 +760,15 @@ async function clearLiveResults() {
   /* Reverting removes every manual entry and rebuilds predictions from the raw dataset. */
   liveStatusEl.innerHTML = spinner("Reverting to source data");
   try {
-    const res = await fetch("/api/live-results", { method: "DELETE" });
+    const res = await fetch("/api/live-results", {
+      method: "DELETE",
+      /* Send the admin key so the server authorizes this clear. */
+      headers: { "X-Admin-Key": state.adminKey || "" },
+    });
+    if (res.status === 401) {
+      liveStatusEl.textContent = "Editing is owner-only. Unlock with the owner key first.";
+      return;
+    }
     if (!res.ok) {
       liveStatusEl.textContent = "Could not clear results.";
       return;
@@ -709,6 +822,8 @@ async function boot() {
     await loadPredictions();
     /* Load any already-applied live results so the list reflects server state on open. */
     await loadLiveResults();
+    /* Determine whether editing is locked, and auto-unlock with a saved owner key. */
+    await initAdminGate();
   } catch (err) {
     console.error(err);
     simCountEl.textContent = "Failed to load baseline predictions.";

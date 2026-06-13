@@ -11,7 +11,9 @@ import json
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-from fastapi import FastAPI, HTTPException, Query
+import os
+
+from fastapi import FastAPI, HTTPException, Query, Header
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -28,6 +30,25 @@ STATIC_DIR = BASE_DIR / "static"
 
 app = FastAPI(title="World Cup 2026 Oracle API")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+# Admin key gates the write actions (saving and clearing live results) so that
+# only the owner can change the shared model state, while everyone with the link
+# keeps full read access (odds, deep-dives, head-to-head, what-if). The key is
+# read from the ADMIN_KEY env var. If it is unset (for example local dev), writes
+# are left open so nothing breaks on your own machine.
+ADMIN_KEY = os.environ.get("ADMIN_KEY", "").strip()
+
+
+def require_admin(x_admin_key: str = Header(default="")) -> None:
+    """Reject write requests that lack the correct admin key.
+
+    When ADMIN_KEY is empty we skip the check entirely, which keeps local use
+    frictionless. When it is set (in the public deployment), the header must match.
+    """
+    if not ADMIN_KEY:
+        return
+    if x_admin_key != ADMIN_KEY:
+        raise HTTPException(status_code=401, detail="Admin key required to change live results.")
 
 # Module-level cache avoids retraining Elo per request, which keeps API latency low.
 MODEL: EloModel | None = None
@@ -243,6 +264,24 @@ def _rebuild_after_live_change() -> None:
     GROUPS = build_groups()
 
 
+@app.get("/api/admin-status")
+def api_admin_status() -> dict:
+    """Tell the frontend whether a key is required to edit live results.
+
+    The actual key is never sent to the client. We only report whether the
+    deployment is locked, so the UI can show the unlock prompt when needed.
+    """
+    return {"locked": bool(ADMIN_KEY)}
+
+
+@app.post("/api/admin-verify")
+def api_admin_verify(x_admin_key: str = Header(default="")) -> dict:
+    """Check a supplied key without making any change, so the UI can confirm unlock."""
+    if not ADMIN_KEY:
+        return {"ok": True, "locked": False}
+    return {"ok": x_admin_key == ADMIN_KEY, "locked": True}
+
+
 @app.get("/api/live-results")
 def api_live_results_list() -> dict:
     """Return all manually entered live results currently applied."""
@@ -250,8 +289,9 @@ def api_live_results_list() -> dict:
 
 
 @app.post("/api/live-results")
-def api_live_results_add(result: LiveResult) -> dict:
+def api_live_results_add(result: LiveResult, x_admin_key: str = Header(default="")) -> dict:
     """Add or update one observed match score, then refresh all predictions."""
+    require_admin(x_admin_key)  # Only the owner may write shared state.
     _init_state()
     if result.home == result.away:
         raise HTTPException(status_code=400, detail="A match needs two different teams.")
@@ -268,8 +308,9 @@ def api_live_results_add(result: LiveResult) -> dict:
 
 
 @app.delete("/api/live-results")
-def api_live_results_clear() -> dict:
+def api_live_results_clear(x_admin_key: str = Header(default="")) -> dict:
     """Clear all manual entries and revert to the dataset's own results."""
+    require_admin(x_admin_key)  # Only the owner may wipe shared state.
     clear_results()
     _rebuild_after_live_change()
     return {"status": "cleared", "live_results": []}

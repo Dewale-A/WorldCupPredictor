@@ -55,3 +55,14 @@ Run a refresh manually anytime:
 ```
 ./refresh.sh
 ```
+
+## Owner-only editing (admin key)
+
+When deployed publicly, set an `ADMIN_KEY` environment variable to lock the
+"Save result" and "Clear all" actions to the owner. Everyone with the link keeps
+full read access (odds, deep-dives, head-to-head, what-if), but only someone with
+the key can change the shared live results.
+
+- Set `ADMIN_KEY=your-secret` in the deployment environment.
+- In the app, click "Unlock", enter the key once. It is remembered in your browser.
+- If `ADMIN_KEY` is unset (local dev), editing is open with no key required.

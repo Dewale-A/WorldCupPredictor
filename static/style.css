@@ -992,6 +992,36 @@ button:disabled {
   margin: 12px 0 0;
 }
 
+/* ---------- Admin gate (owner-only editing) ---------- */
+.admin-gate {
+  /* A subtle banner that signals editing is locked, with an inline unlock action. */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 14px 0 0;
+  padding: 10px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: rgba(231, 194, 101, 0.08);
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.admin-unlock {
+  /* Gold-tinted unlock button ties the owner action to the app's accent system. */
+  background: transparent;
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-unlock:hover { background: rgba(231, 194, 101, 0.12); }
+
 /* ---------- Live Results ---------- */
 .live-list {
   /* Spacing separates the applied-results list from the entry controls above it. */
