@@ -42,6 +42,13 @@
   box-sizing: border-box;
 }
 
+/* Global safety net: never allow the page to scroll sideways. Any internal wide
+   element (like the bracket) must scroll within its own container, not the body. */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 html {
   /* Smooth anchors make section navigation feel deliberate without extra scripts. */
   scroll-behavior: smooth;
@@ -81,6 +88,10 @@ body.modal-open {
   border-radius: var(--radius);
   padding: 28px;
   box-shadow: var(--shadow);
+  /* min-width:0 is essential: cards are grid items, and without it they refuse
+     to shrink below their content width, forcing the whole page wider than the
+     phone screen. This single line is what lets every section reflow on mobile. */
+  min-width: 0;
 }
 
 .hero {
@@ -518,13 +529,20 @@ button:disabled {
 }
 
 .bracket {
-  /* Horizontal scrolling preserves true bracket columns on small screens. */
+  /* Horizontal scrolling preserves true bracket columns on small screens.
+     min-width:0 and max-width:100% are critical: without them this column grid
+     forces its full natural width (5 rounds wide) onto the page body, which was
+     the root cause of mobile horizontal overflow. Now it scrolls inside itself. */
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: minmax(210px, 1fr);
   gap: 14px;
   overflow-x: auto;
+  min-width: 0;
+  max-width: 100%;
   padding-bottom: 4px;
+  /* Momentum scrolling on iOS so the bracket feels native when swiped. */
+  -webkit-overflow-scrolling: touch;
 }
 
 .bracket-col {
@@ -1156,20 +1174,50 @@ button:disabled {
   }
 }
 
+@media (max-width: 640px) {
+  /* Phone layout: stack the backtest table into single-column rows so nothing
+     is cut off, and narrow the bracket round columns to fit smaller screens. */
+  .bt-row {
+    grid-template-columns: 1fr;
+    row-gap: 4px;
+    padding: 10px 12px;
+  }
+  .bt-head { display: none; } /* header labels are redundant once stacked */
+  .bracket {
+    grid-auto-columns: minmax(180px, 78vw);
+  }
+  /* Score inputs in the live and what-if controls go full-width-friendly. */
+  .whatif-controls input { width: 100%; }
+}
+
 @media (max-width: 600px) {
   /* Mobile spacing and grids are simplified to preserve clarity and tap targets. */
   .container {
-    padding: 36px 16px 60px;
-    gap: 20px;
+    padding: 28px 14px 56px;
+    gap: 18px;
   }
 
   .card {
-    padding: 22px;
+    padding: 18px 16px;
   }
 
   .hero {
-    padding: 24px 18px 30px;
+    padding: 22px 16px 28px;
   }
+
+  /* Keep the hero share button from stretching awkwardly on small screens. */
+  .hero-actions { flex-direction: column; }
+  .secondary-btn { width: 100%; }
+
+  /* Headers: let the section title and chip wrap instead of overflowing. */
+  .section-head {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  /* Info panels: tighter padding and guaranteed text wrapping on phones. */
+  .info-panel { padding: 14px; }
+  .info-list li, .info-lead, .info-tip { word-break: break-word; }
 
   .odds-row {
     grid-template-columns: 20px 1fr 96px;
