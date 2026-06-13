@@ -451,9 +451,9 @@ async function runH2H() {
 
   h2hResultEl.classList.remove("hidden");
   h2hMetaEl.innerHTML =
-    `${flagFor(data.team_a)} ${data.team_a} <span style="opacity:.6">Elo ${data.elo_a}</span>` +
+    `${flagFor(data.team_a)} ${data.team_a} <span class="elo-meta">Elo ${data.elo_a}</span>` +
     ` &nbsp;•&nbsp; ` +
-    `${flagFor(data.team_b)} ${data.team_b} <span style="opacity:.6">Elo ${data.elo_b}</span>`;
+    `${flagFor(data.team_b)} ${data.team_b} <span class="elo-meta">Elo ${data.elo_b}</span>`;
 
   winAEl.style.width = `${(Number(data.win_a || 0) * 100).toFixed(1)}%`;
   drawEl.style.width = `${(Number(data.draw || 0) * 100).toFixed(1)}%`;

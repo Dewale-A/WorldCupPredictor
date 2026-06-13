@@ -464,6 +464,17 @@ button:disabled {
   border-top: 1px solid var(--line);
 }
 
+/* Dim Elo strength numbers; hidden on narrow screens to keep the mobile
+   result line clean for casual users (desktop still shows the credibility cue). */
+.elo-meta {
+  opacity: 0.6;
+}
+@media (max-width: 600px) {
+  .elo-meta {
+    display: none;
+  }
+}
+
 .h2h-meta {
   /* Centered metadata frames Elo context before users inspect percentages. */
   color: var(--muted);
