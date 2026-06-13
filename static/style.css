@@ -1,0 +1,1199 @@
+/*
+  World Cup 2026 Oracle clean UI theme.
+  The design stays restrained so the data feels premium, readable, and credible.
+*/
+
+:root {
+  /* Core dark palette drives the primary experience and preserves original style language. */
+  --bg-0: #0b1020;
+  --bg-1: #11172e;
+  --surface: #151c34;
+  --surface-2: #1b2342;
+  --surface-3: #0f152c;
+  --line: rgba(148, 170, 214, 0.14);
+  --line-strong: rgba(148, 170, 214, 0.28);
+  --text: #eaf0fb;
+  --muted: #93a1bd;
+  --teal: #2dd4bf;
+  --teal-deep: #14b8a6;
+  --gold: #e7c265;
+  --blue: #60a5fa;
+  --radius: 18px;
+  --radius-sm: 12px;
+  --shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.8);
+}
+
+[data-theme="light"] {
+  /* Light theme keeps the same accents so brand identity survives the palette switch. */
+  --bg-0: #eef3fb;
+  --bg-1: #f7fafc;
+  --surface: #ffffff;
+  --surface-2: #f4f7fc;
+  --surface-3: #edf3fb;
+  --line: rgba(15, 23, 42, 0.1);
+  --line-strong: rgba(15, 23, 42, 0.2);
+  --text: #0f172a;
+  --muted: #4b556f;
+  --shadow: 0 14px 28px -18px rgba(15, 23, 42, 0.22);
+}
+
+* {
+  /* Border-box prevents layout drift as new components and badges are added. */
+  box-sizing: border-box;
+}
+
+html {
+  /* Smooth anchors make section navigation feel deliberate without extra scripts. */
+  scroll-behavior: smooth;
+}
+
+body {
+  /* Subtle vertical gradient adds atmosphere while preserving chart and text readability. */
+  margin: 0;
+  background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 100%);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+body.modal-open {
+  /* Preventing scroll behind modal keeps focus on team deep-dive content. */
+  overflow: hidden;
+}
+
+.container {
+  /* Generous central column reinforces a portfolio-grade, editorial layout rhythm. */
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 56px 24px 80px;
+  display: grid;
+  gap: 28px;
+}
+
+.card {
+  /* Consistent cards keep many feature modules visually unified and calm. */
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow);
+}
+
+.hero {
+  /* Hero receives a soft accent wash to establish identity without noisy decoration. */
+  position: relative;
+  text-align: center;
+  padding: 34px 28px 42px;
+  background:
+    radial-gradient(120% 140% at 50% 0%, rgba(45, 212, 191, 0.08) 0%, transparent 55%),
+    var(--surface);
+}
+
+.hero-top {
+  /* Top-right slot isolates utility controls so title hierarchy remains clear.
+     A small negative top pull and right inset keep the toggle inside the card. */
+  display: flex;
+  justify-content: flex-end;
+  margin: -6px 2px 8px 0;
+}
+
+.hero-actions {
+  /* Hero action row centralizes social sharing affordance for quick discovery. */
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.theme-toggle {
+  /* Teal-tinted ring gives the toggle enough contrast to be discoverable on the
+     dark hero, while staying subtle enough not to compete with the title. */
+  background: var(--surface-2);
+  color: var(--teal);
+  border: 1px solid var(--teal);
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+.theme-toggle:hover {
+  /* Slight lift signals interactivity while keeping the premium restraint. */
+  transform: translateY(-1px);
+}
+
+.secondary-btn {
+  /* Secondary button style lets share CTA stand apart from simulation action buttons. */
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.secondary-btn:hover {
+  /* Accent tint on hover links this button to primary teal identity. */
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.kicker {
+  /* High letter spacing makes the micro-label feel intentionally editorial. */
+  letter-spacing: 0.22em;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--teal);
+  text-transform: uppercase;
+  margin: 0 0 14px;
+}
+
+h1 {
+  /* Bold title anchors the page as a product, not a plain dashboard. */
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.trophy {
+  /* Soft highlight on trophy supports the celebratory betting context. */
+  filter: drop-shadow(0 4px 14px rgba(231, 194, 101, 0.45));
+}
+
+.subtitle {
+  /* Muted subtitle keeps supporting context readable without competing with title. */
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.section-head {
+  /* Shared header scaffold keeps each module instantly scannable. */
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+h2 {
+  /* Compact heading size prevents over-weighting section titles over data itself. */
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+h3,
+h4,
+p {
+  /* Resetting inconsistent default margins avoids accidental spacing noise. */
+  margin-top: 0;
+}
+
+.chip {
+  /* Chips provide context labels without introducing extra color systems. */
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.info-panel {
+  /* Reused explainer box pattern keeps onboarding consistent across new features. */
+  background: rgba(45, 212, 191, 0.05);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--teal);
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+
+.info-lead {
+  /* Slightly stronger lead sentence helps users parse dense feature explanations. */
+  margin: 0 0 12px;
+  font-size: 0.96rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.info-list {
+  /* Bulletless list with custom markers keeps tone premium and precise. */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.info-list li {
+  /* Indented items create neat alignment without relying on browser bullets. */
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.5;
+  padding-left: 18px;
+  position: relative;
+}
+
+.info-list li::before {
+  /* Teal markers subtly signal actionable guidance across all info panels. */
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--teal);
+}
+
+.info-list strong {
+  /* Bolder labels let users scan "what / why / use" rows quickly. */
+  color: var(--text);
+  font-weight: 600;
+}
+
+.info-tip {
+  /* Tip line uses accent color to stand out as practical guidance. */
+  margin: 12px 0 0;
+  font-size: 0.82rem;
+  color: var(--teal);
+  opacity: 0.9;
+}
+
+.leaderboard {
+  /* Vertical list with measured spacing keeps top odds easy to compare. */
+  display: grid;
+  gap: 14px;
+}
+
+.odds-row {
+  /* Grid layout locks rank, team, bar, and value into stable visual columns. */
+  display: grid;
+  grid-template-columns: 24px minmax(140px, 200px) 1fr 112px;
+  gap: 14px;
+  align-items: center;
+}
+
+.odds-rank {
+  /* Tabular numerics stop rank text from shifting width between rows. */
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.odds-team {
+  /* Team names are buttons so deep-dive interactions feel native and obvious. */
+  font-weight: 600;
+  font-size: 0.97rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.odds-team:hover .team-name,
+.group-team-link:hover .team-name {
+  /* Underline on hover reinforces that team names are interactive controls. */
+  text-decoration: underline;
+  text-decoration-color: var(--teal);
+  text-underline-offset: 2px;
+}
+
+.odds-team .team-name,
+.group-team-link .team-name {
+  /* Truncation protects layout from long federation names on narrow screens. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.flag {
+  /* Fixed-size flags keep all list rows visually aligned and professional. */
+  width: 20px;
+  height: 15px;
+  flex: none;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  vertical-align: middle;
+}
+
+[data-theme="light"] .flag {
+  /* Darker border in light mode preserves flag edge clarity. */
+  border-color: rgba(15, 23, 42, 0.15);
+}
+
+.odds-track {
+  /* Neutral track gives probability bars context while preserving emphasis on fill color. */
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+[data-theme="light"] .odds-track {
+  /* Slightly darker track in light mode maintains contrast consistency. */
+  background: rgba(15, 23, 42, 0.1);
+}
+
+.odds-fill {
+  /* Animated bar width communicates live simulation updates in a tasteful way. */
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--teal-deep), var(--teal));
+  transition: width 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.odds-pct {
+  /* Right-aligned tabular values simplify side-by-side probability comparison. */
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--text);
+}
+
+.ci-note {
+  /* Confidence note is muted so it informs without overcrowding the row. */
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+.odds-row.leader .odds-team,
+.odds-row.leader .odds-pct {
+  /* Gold remains exclusive to the top team to preserve clear hierarchy. */
+  color: var(--gold);
+}
+
+.odds-row.leader .odds-fill {
+  /* Gold gradient reinforces the champion favorite as a focal point. */
+  background: linear-gradient(90deg, #caa64a, var(--gold));
+}
+
+select,
+input,
+button {
+  /* Shared control foundation ensures forms feel cohesive across sections. */
+  font: inherit;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line-strong);
+  background: var(--surface-2);
+  color: var(--text);
+  padding: 11px 13px;
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 120ms ease;
+}
+
+select:focus,
+input:focus {
+  /* Teal focus ring preserves accessibility and brand consistency. */
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.16);
+}
+
+button {
+  /* Primary button gradient signals action importance in predictor workflows. */
+  cursor: pointer;
+  font-weight: 700;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--teal), var(--teal-deep));
+  color: #06231f;
+}
+
+button:hover {
+  /* Minimal lift keeps controls feeling responsive without flashy motion. */
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+button:active {
+  /* Resetting transform on press improves tactile interaction feedback. */
+  transform: translateY(0);
+}
+
+button:disabled {
+  /* Disabled state prevents duplicate requests and makes async state explicit. */
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.h2h-controls {
+  /* Three-column control row supports fast matchup iteration on desktop. */
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+}
+
+.h2h-result {
+  /* Top border separates results from controls to reduce cognitive blending. */
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.h2h-meta {
+  /* Centered metadata frames Elo context before users inspect percentages. */
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 14px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.split-bar {
+  /* Horizontal split bar quickly communicates relative chance distribution. */
+  display: grid;
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 10px 0;
+}
+
+#winA {
+  /* Blue side distinguishes Team A from draw and Team B for immediate parsing. */
+  background: var(--blue);
+}
+
+#draw {
+  /* Neutral draw color avoids pulling attention from win channels. */
+  background: #5b6b85;
+}
+
+#winB {
+  /* Teal side aligns Team B with primary accent color family. */
+  background: var(--teal);
+}
+
+.split-labels {
+  /* Balanced labels prevent one side from dominating visual weight. */
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.scoreline {
+  /* Centered scoreline highlights a single narrative outcome after percentages. */
+  text-align: center;
+  margin: 22px 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.scoreline strong {
+  /* Large likely score gives fans a satisfying "headline prediction" moment. */
+  display: block;
+  margin-top: 6px;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+
+.bracket {
+  /* Horizontal scrolling preserves true bracket columns on small screens. */
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(210px, 1fr);
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.bracket-col {
+  /* Column cards keep each knockout round visually grouped. */
+  border: 1px solid var(--line);
+  background: var(--surface-3);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  min-height: 100%;
+}
+
+.bracket-col h3 {
+  /* Compact uppercase heading mimics broadcast-style tournament graphics. */
+  margin: 0 0 10px;
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.match-card {
+  /* Match cards separate fixtures cleanly while staying lightweight. */
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.match-team {
+  /* Team rows mimic compact scoreboard styling for familiar sports readability. */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  font-size: 0.86rem;
+  background: var(--surface-2);
+}
+
+.match-team + .match-team {
+  /* Divider between opponents clarifies the two-team pairing structure. */
+  border-top: 1px solid var(--line);
+}
+
+.match-team.winner {
+  /* Winner emphasis helps users follow progression across rounds quickly. */
+  font-weight: 700;
+  color: var(--text);
+}
+
+.match-team.loser {
+  /* Muted loser styling avoids noise while preserving full fixture context. */
+  color: var(--muted);
+}
+
+.groups-grid {
+  /* Responsive group grid balances overview density and per-card breathing room. */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.group-card {
+  /* Deep inset card maintains contrast against parent section surface. */
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  background: var(--surface-3);
+}
+
+.group-card h3 {
+  /* Group labels use the established uppercase convention for consistency. */
+  margin: 0 0 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.group-card ul {
+  /* Tidy vertical list keeps four-team groups scannable in seconds. */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 11px;
+}
+
+.group-card li {
+  /* Two-column row supports team identity and advance probability in one glance. */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 110px;
+  gap: 8px;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.group-card li.likely-advance {
+  /* Subtle tint highlights likely qualifiers without overpowering non-qualifiers. */
+  background: rgba(45, 212, 191, 0.08);
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+
+.group-team-link {
+  /* Team link inherits card typography while staying keyboard-focusable. */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  padding: 0;
+  text-align: left;
+}
+
+.group-adv-wrap {
+  /* Micro chart and percentage pairing gives odds precision and quick visual rank. */
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 7px;
+}
+
+.group-adv-track {
+  /* Thin track avoids crowding card layout while still encoding magnitude. */
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+[data-theme="light"] .group-adv-track {
+  /* Light mode track tweak keeps advance bars visible and balanced. */
+  background: rgba(15, 23, 42, 0.12);
+}
+
+.group-adv-fill {
+  /* Teal fill keeps group probability visuals aligned with app-wide accent rules. */
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--teal-deep), var(--teal));
+}
+
+.group-adv-pct {
+  /* Tabular micro-label lets users compare percentages without jitter. */
+  font-size: 0.76rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.backtest-headline {
+  /* Headline stat is prominent because this is the credibility centerpiece. */
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--gold);
+  border-radius: var(--radius-sm);
+  background: rgba(231, 194, 101, 0.08);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.backtest-headline p {
+  /* Tight spacing keeps this trust metric punchy and memorable. */
+  margin: 0;
+  color: var(--text);
+  font-size: 0.98rem;
+}
+
+.backtest-headline strong {
+  /* Gold highlights the key calibration value without adding extra chart chrome. */
+  color: var(--gold);
+}
+
+.backtest-table {
+  /* Structured evidence rows make historical validation easy to audit visually. */
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--surface-3);
+}
+
+.bt-row {
+  /* Four-column grid keeps year, winner, rank, and favorite aligned. */
+  display: grid;
+  grid-template-columns: 74px minmax(170px, 1fr) 130px minmax(140px, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  font-size: 0.86rem;
+}
+
+.bt-row + .bt-row {
+  /* Row separators aid scanability in dense historical data lists. */
+  border-top: 1px solid var(--line);
+}
+
+.bt-head {
+  /* Header row uses muted uppercase styling to avoid stealing focus from data rows. */
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.7rem;
+  color: var(--muted);
+  background: rgba(45, 212, 191, 0.08);
+}
+
+.bt-note {
+  /* Supporting sentence echoes the requested wording for clarity and trust. */
+  margin: 0;
+  padding: 0 12px 10px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.whatif-controls {
+  /* Grid layout keeps score entry compact and readable at desktop sizes. */
+  display: grid;
+  grid-template-columns: 1fr 1fr 64px 64px auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.whatif-controls input {
+  /* Centered numeric values improve readability for scoreline editing. */
+  text-align: center;
+}
+
+.muted {
+  /* Reusable muted class standardizes low-priority explanatory text across modules. */
+  color: var(--muted);
+  margin: 0 0 18px;
+  font-size: 0.92rem;
+}
+
+.inline-loading {
+  /* Inline loading wrapper aligns spinner and text cleanly in status labels. */
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spinner {
+  /* Tiny spinner gives immediate async feedback with minimal visual distraction. */
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(45, 212, 191, 0.28);
+  border-top-color: var(--teal);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  /* Rotation animation is intentionally simple to keep motion tasteful. */
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.modal {
+  /* Fixed overlay makes deep-dive details feel focused and app-like. */
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+}
+
+.modal.hidden {
+  /* Visibility gate avoids unnecessary paints and click interception. */
+  display: none;
+}
+
+.modal-backdrop {
+  /* Dimmed backdrop isolates modal content and improves reading concentration. */
+  position: absolute;
+  inset: 0;
+  background: rgba(4, 7, 16, 0.72);
+}
+
+.modal-dialog {
+  /* Centered dialog with max-height preserves usability for long team profiles. */
+  position: relative;
+  max-width: 760px;
+  width: calc(100% - 28px);
+  max-height: calc(100% - 48px);
+  overflow: auto;
+  margin: 24px auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  padding: 22px;
+}
+
+.modal-close {
+  /* Corner close button follows familiar modal conventions for fast dismissal. */
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface-2);
+  color: var(--text);
+  padding: 0;
+  line-height: 1;
+}
+
+.modal-content {
+  /* Top padding gives title breathing room away from the close control. */
+  padding-top: 8px;
+}
+
+.team-card-head {
+  /* Header pairs identity and group context before deeper probability details. */
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.team-card-head h3 {
+  /* Large team heading makes the deep-dive feel like a premium player card. */
+  margin: 0;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.team-group-chip {
+  /* Compact chip surfaces group info without adding separate block clutter. */
+  font-size: 0.78rem;
+  color: var(--teal);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 5px 10px;
+}
+
+.team-title-odds {
+  /* Primary odds line summarizes title chance and confidence immediately. */
+  margin: 0 0 18px;
+  color: var(--muted);
+}
+
+.team-title-odds strong {
+  /* Strong value emphasis creates an instant "headline number" for the card. */
+  color: var(--gold);
+}
+
+.team-section {
+  /* Section spacing keeps several probability modules readable in one modal. */
+  margin-bottom: 18px;
+}
+
+.team-section h4 {
+  /* Small uppercase title style keeps internal card structure consistent. */
+  margin: 0 0 10px;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.progression-grid,
+.mini-grid {
+  /* Stacked rows with subtle gaps encourage easy vertical scanning. */
+  display: grid;
+  gap: 8px;
+}
+
+.prog-row,
+.mini-row {
+  /* Shared three-column row pattern ensures predictable reading flow. */
+  display: grid;
+  grid-template-columns: 64px 1fr 62px;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.84rem;
+}
+
+.prog-label,
+.prog-pct {
+  /* Muted progression labels keep bar shape and values as the visual priority. */
+  color: var(--muted);
+}
+
+.prog-track,
+.mini-track {
+  /* Neutral track style keeps probabilistic scale consistent in all mini-charts. */
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+[data-theme="light"] .prog-track,
+[data-theme="light"] .mini-track {
+  /* Light-mode track contrast tuning prevents bars from disappearing. */
+  background: rgba(15, 23, 42, 0.1);
+}
+
+.prog-fill,
+.mini-fill {
+  /* Shared fill style reinforces one visual language for all probability bars. */
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--teal-deep), var(--teal));
+}
+
+.opp-list {
+  /* Opponent list uses card rows to make matchup probabilities digestible. */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.opp-list li {
+  /* Row split balances identity and probability with clear end alignment. */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: var(--surface-3);
+  font-size: 0.85rem;
+}
+
+.team-loading {
+  /* Full-width modal loader avoids blank panel anxiety during API fetch. */
+  padding: 24px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.methodology {
+  /* Details element preserves a clean page while still exposing full methodology. */
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-3);
+  overflow: hidden;
+}
+
+.methodology summary {
+  /* Bold summary makes educational content discoverable without forcing attention. */
+  cursor: pointer;
+  padding: 14px 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.method-body {
+  /* Light tint and spacing separate long-form explanation from terse dashboard content. */
+  padding: 0 16px 16px;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  background: rgba(45, 212, 191, 0.04);
+}
+
+.method-body p {
+  /* Compact paragraph spacing keeps methodology readable on mobile and desktop. */
+  margin: 12px 0 0;
+}
+
+/* ---------- Live Results ---------- */
+.live-list {
+  /* Spacing separates the applied-results list from the entry controls above it. */
+  margin-top: 16px;
+}
+
+.live-list-head {
+  /* Row pairs the count with the clear-all action for quick management. */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.live-clear {
+  /* Subtle danger-tinted button keeps clear-all available but visually quiet. */
+  background: transparent;
+  color: #f08a8a;
+  border: 1px solid rgba(240, 138, 138, 0.4);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.live-clear:hover { background: rgba(240, 138, 138, 0.1); }
+
+.live-chips {
+  /* Wrapping chip list shows each locked-in result compactly. */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.live-chip {
+  /* Each chip reads like a mini scoreline, with flags flanking the team names. */
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 0.85rem;
+}
+
+.method-intro {
+  /* Slightly larger, brighter lead so the core idea reads before the steps. */
+  color: var(--text);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.method-steps {
+  /* Reset list chrome: custom numbered badges replace default markers for clarity. */
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.method-steps li {
+  /* Two-column row pairs a numbered badge with its explanation, aligned at the top. */
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.step-num {
+  /* Teal circle badge gives each step a clear, scannable anchor. */
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(45, 212, 191, 0.15);
+  border: 1px solid var(--teal);
+  color: var(--teal);
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: grid;
+  place-items: center;
+}
+
+.step-text {
+  /* Body text sits at comfortable reading contrast, with bold leads for the verb. */
+  color: var(--muted);
+  line-height: 1.5;
+  padding-top: 2px;
+}
+
+.step-text strong { color: var(--text); }
+
+.method-foot {
+  /* Muted closing note mirrors the info-tip style used elsewhere for consistency. */
+  margin-top: 16px;
+  font-size: 0.85rem;
+  color: var(--teal);
+}
+
+.hidden {
+  /* Utility class centralizes toggled element hiding behavior. */
+  display: none;
+}
+
+.foot {
+  /* Quiet footer preserves credibility note without pulling focus from features. */
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  padding-top: 4px;
+}
+
+@media (max-width: 980px) {
+  /* Two-column groups at medium sizes maintain density without cramped cards. */
+  .groups-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  /* Backtest rows collapse to two columns so text remains legible on tablets. */
+  .bt-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 6px;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Mobile spacing and grids are simplified to preserve clarity and tap targets. */
+  .container {
+    padding: 36px 16px 60px;
+    gap: 20px;
+  }
+
+  .card {
+    padding: 22px;
+  }
+
+  .hero {
+    padding: 24px 18px 30px;
+  }
+
+  .odds-row {
+    grid-template-columns: 20px 1fr 96px;
+    grid-template-areas: "rank team pct" "rank bar bar";
+    gap: 6px 12px;
+  }
+
+  .odds-rank {
+    grid-area: rank;
+  }
+
+  .odds-team {
+    grid-area: team;
+  }
+
+  .odds-pct {
+    grid-area: pct;
+  }
+
+  .odds-track {
+    grid-area: bar;
+  }
+
+  .h2h-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .whatif-controls {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .groups-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .group-card li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .modal-dialog {
+    width: calc(100% - 16px);
+    margin: 8px auto;
+    max-height: calc(100% - 16px);
+    padding: 18px;
+  }
+
+  .team-card-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .prog-row,
+  .mini-row {
+    grid-template-columns: 54px 1fr 52px;
+  }
+}

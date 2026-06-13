@@ -1,0 +1,16 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+.DS_Store
+
+# Local preview artifacts
+*_preview*.png
+preview_*.png
+
+# Live results are runtime state, not source. Keep the app reproducible.
+# (Comment this out if you WANT to ship the current entered results.)
+data/live_results.json

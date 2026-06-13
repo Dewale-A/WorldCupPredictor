@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>World Cup 2026 Oracle</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <!-- Hero establishes trust and places utility controls where they are easy to reach. -->
+      <header class="hero card">
+        <div class="hero-top">
+          <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme" title="Toggle light and dark theme">◐</button>
+        </div>
+        <p class="kicker">World Cup Forecast Lab</p>
+        <h1>World Cup 2026 Oracle <span class="trophy">🏆</span></h1>
+        <p class="subtitle">
+          150 years of match data, distilled into live title odds through Monte Carlo simulation.
+        </p>
+        <div class="hero-actions">
+          <button id="shareBtn" class="secondary-btn">Share my prediction</button>
+        </div>
+      </header>
+
+      <!-- Leaderboard appears first because title odds are the top fan question. -->
+      <section class="card">
+        <div class="section-head">
+          <h2>Championship Odds</h2>
+          <span id="simCount" class="chip">Loading simulations.</span>
+        </div>
+        <div class="info-panel">
+          <p class="info-lead">
+            Every team's live chance of lifting the 2026 World Cup, ranked.
+          </p>
+          <ul class="info-list">
+            <li><strong>What you see:</strong> each nation's chance to win the tournament, with confidence spread and the favorite in gold.</li>
+            <li><strong>How it works:</strong> the full bracket is simulated tens of thousands of times, counting titles by team.</li>
+            <li><strong>Use it for:</strong> a quick read on favorites, dark horses, and where your team truly stands.</li>
+          </ul>
+          <p class="info-tip">Tip: click any team to open a full Path to Glory deep-dive.</p>
+        </div>
+        <div id="leaderboard" class="leaderboard"></div>
+      </section>
+
+      <!-- Groups come right after the odds because the group stage is what happens first
+           in the real tournament; the knockout bracket below is fed by these results. -->
+      <section class="card">
+        <div class="section-head">
+          <h2>Groups</h2>
+          <span class="chip">Advance odds</span>
+        </div>
+        <div class="info-panel">
+          <p class="info-lead">
+            All 12 groups, with each team's chance of reaching the knockouts.
+          </p>
+          <ul class="info-list">
+            <li><strong>The bar:</strong> shows how often each team advances out of its group across every simulation.</li>
+            <li><strong>Highlighted teams:</strong> the two most likely to progress from each group.</li>
+          </ul>
+          <p class="info-tip">Tip: click any team for its full Path to Glory breakdown.</p>
+        </div>
+        <div id="groupsGrid" class="groups-grid"></div>
+      </section>
+
+      <!-- Bracket section turns abstract probabilities into a visual tournament story.
+           It sits after Groups because the knockout stage follows the group stage. -->
+      <section class="card">
+        <div class="section-head">
+          <h2>Projected Bracket</h2>
+          <span class="chip">One representative run</span>
+        </div>
+        <div class="info-panel">
+          <p class="info-lead">
+            A sample knockout path from the model, round by round.
+          </p>
+          <ul class="info-list">
+            <li><strong>What you see:</strong> a full R32 to Final bracket, with winners emphasized and losers muted.</li>
+            <li><strong>How to read it:</strong> this is one realistic tournament draw from the same simulation engine that powers the odds.</li>
+            <li><strong>Use it for:</strong> visualizing plausible routes and where elite teams collide.</li>
+          </ul>
+          <p class="info-tip">Tip: this view is illustrative, while the leaderboard aggregates all simulations.</p>
+        </div>
+        <div id="bracket" class="bracket"></div>
+        <p id="bracketNote" class="muted"></p>
+      </section>
+
+      <!-- H2H controls are intentionally compact for quick side-by-side debates. -->
+      <section class="card">
+        <div class="section-head">
+          <h2>Head to Head Predictor</h2>
+          <span class="chip">Settle the debate</span>
+        </div>
+        <div class="info-panel">
+          <p class="info-lead">
+            Pick any two nations and see who the model thinks wins, straight up.
+          </p>
+          <ul class="info-list">
+            <li><strong>What you get:</strong> win, draw, and loss probabilities, plus the most likely scoreline.</li>
+            <li><strong>How it works:</strong> each team's Elo strength feeds a goal model that plays the match 10,000 times.</li>
+            <li><strong>Use it for:</strong> bracket debates, upset checks, and matchup previews.</li>
+          </ul>
+          <p class="info-tip">Tip: try a heavy favorite versus an underdog to inspect upset odds.</p>
+        </div>
+        <div class="h2h-controls">
+          <select id="teamA"></select>
+          <select id="teamB"></select>
+          <button id="predictBtn">Predict</button>
+        </div>
+        <div id="h2hResult" class="h2h-result hidden">
+          <p id="h2hMeta" class="h2h-meta"></p>
+          <div class="split-bar">
+            <div id="winA"></div>
+            <div id="draw"></div>
+            <div id="winB"></div>
+          </div>
+          <div class="split-labels">
+            <span id="labelA"></span>
+            <span id="labelD"></span>
+            <span id="labelB"></span>
+          </div>
+          <p class="scoreline">Likely score: <strong id="likelyScore"></strong></p>
+        </div>
+      </section>
+
+      <!-- Backtest serves as the credibility centerpiece for portfolio presentation. -->
+      <section class="card">
+        <div class="section-head">
+          <h2>How Accurate Is This?</h2>
+          <span class="chip">Historical calibration</span>
+        </div>
+        <div class="info-panel">
+          <p class="info-lead">
+            The model is evaluated against previous tournaments to benchmark credibility.
+          </p>
+          <ul class="info-list">
+            <li><strong>What matters:</strong> where the actual champion ranked in model pre-tournament odds.</li>
+            <li><strong>Why it matters:</strong> consistent top-five champion placement indicates realistic signal quality.</li>
+            <li><strong>How to use it:</strong> read this as evidence strength, not as a guarantee for one future event.</li>
+          </ul>
+        </div>
+        <div id="backtestHeadline" class="backtest-headline"></div>
+        <div id="backtestTable" class="backtest-table"></div>
+      </section>
+
+      <!-- Live Results lets users enter real scores so odds update before the data feed catches up. -->
+      <section class="card">
+        <div class="section-head">
+          <h2>Live Results</h2>
+          <span class="chip">Keep it current</span>
+        </div>
+        <div class="info-panel">
+          <p class="info-lead">
+            Saw a result already? Enter it here and the whole model updates to match.
+          </p>
+          <ul class="info-list">
+            <li><strong>What it does:</strong> records a real, final score and treats it as official, so every odd on the page reflects it.</li>
+            <li><strong>Why it matters:</strong> the source data can lag a day behind. This keeps your predictor ahead of the feed.</li>
+            <li><strong>It sticks:</strong> entered results stay applied until you clear them, unlike the hypothetical What If mode below.</li>
+          </ul>
+          <p class="info-tip">Tip: a big winning margin shifts the odds more than a narrow one.</p>
+        </div>
+        <div class="whatif-controls">
+          <select id="liveHome"></select>
+          <select id="liveAway"></select>
+          <input id="liveHomeScore" type="number" min="0" max="30" value="1" />
+          <input id="liveAwayScore" type="number" min="0" max="30" value="0" />
+          <button id="liveAddBtn">Save result</button>
+        </div>
+        <p id="liveStatus" class="muted"></p>
+        <!-- Applied results list, populated by JS, with a clear-all control. -->
+        <div id="liveResultsList" class="live-list"></div>
+      </section>
+
+      <!-- What If mode remains near the end so baseline context loads first. -->
+      <section class="card">
+        <div class="section-head">
+          <h2>What If Mode</h2>
+          <span class="chip">Rewrite the tournament</span>
+        </div>
+        <div class="info-panel">
+          <p class="info-lead">
+            Force a result, then watch the entire title race recalculate around it.
+          </p>
+          <ul class="info-list">
+            <li><strong>What it does:</strong> locks in a scoreline you choose, then replays the World Cup from that point.</li>
+            <li><strong>What changes:</strong> the Championship Odds board updates live to show the ripple effect by team.</li>
+            <li><strong>Use it for:</strong> scenario testing, upset analysis, and bracket experiments.</li>
+          </ul>
+          <p class="info-tip">Tip: run several scenarios to compare how fragile each favorite is.</p>
+        </div>
+        <div class="whatif-controls">
+          <select id="whatifHome"></select>
+          <select id="whatifAway"></select>
+          <input id="homeScore" type="number" min="0" max="20" value="1" />
+          <input id="awayScore" type="number" min="0" max="20" value="0" />
+          <button id="resimBtn">Re-simulate</button>
+        </div>
+        <p id="whatifStatus" class="muted"></p>
+      </section>
+
+      <!-- Methodology is collapsible so casual users are not overwhelmed, and the
+           rewritten copy uses a plain three-step flow instead of dense paragraphs. -->
+      <section class="card">
+        <div class="section-head">
+          <h2>How It Works</h2>
+          <span class="chip">In plain English</span>
+        </div>
+        <details class="methodology">
+          <summary>How are these odds made?</summary>
+          <div class="method-body">
+            <!-- Lead line answers the most common question (what is Elo) in one breath. -->
+            <p class="method-intro">
+              Every team gets a strength score called Elo. 1500 is average, 2200 and up is world class. Win against a strong team and your score rises. Lose to a weak one and it falls.
+            </p>
+            <!-- Three numbered steps make the pipeline scannable at a glance. -->
+            <ol class="method-steps">
+              <li>
+                <span class="step-num">1</span>
+                <span class="step-text"><strong>Rate every team.</strong> We score all 48 nations using 150 years of results, over 49,000 matches. Recent games and World Cup games count the most.</span>
+              </li>
+              <li>
+                <span class="step-num">2</span>
+                <span class="step-text"><strong>Predict each match.</strong> The gap between two teams' scores turns into a likely result and scoreline.</span>
+              </li>
+              <li>
+                <span class="step-num">3</span>
+                <span class="step-text"><strong>Play it out 30,000 times.</strong> We simulate the whole tournament over and over. How often a team wins becomes its title percentage.</span>
+              </li>
+            </ol>
+            <p class="method-foot">Games that have already been played are locked in, so the odds follow the real tournament.</p>
+          </div>
+        </details>
+      </section>
+    </main>
+
+    <!-- Modal overlay keeps deep-dive details in context without navigation. -->
+    <div id="teamModal" class="modal hidden" aria-hidden="true">
+      <div id="teamModalBackdrop" class="modal-backdrop"></div>
+      <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="teamModalTitle">
+        <button id="teamModalClose" class="modal-close" aria-label="Close">×</button>
+        <div id="teamModalContent" class="modal-content"></div>
+      </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
