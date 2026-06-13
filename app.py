@@ -273,3 +273,13 @@ def api_live_results_clear() -> dict:
     clear_results()
     _rebuild_after_live_change()
     return {"status": "cleared", "live_results": []}
+
+
+if __name__ == "__main__":
+    # Cloud hosts (Render, Railway, Fly) inject the port to bind via the PORT env
+    # var. Reading it here lets the same file run locally and in production.
+    import os
+    import uvicorn
+
+    port = int(os.environ.get("PORT", "8090"))
+    uvicorn.run(app, host="0.0.0.0", port=port)

@@ -1,0 +1,14 @@
+# Render deployment config for the World Cup 2026 Oracle.
+# Connect this repo at https://render.com and it will read this file.
+services:
+  - type: web
+    name: worldcup-2026-oracle
+    runtime: python
+    plan: free
+    # Install dependencies declared in requirements.txt.
+    buildCommand: "pip install -r requirements.txt"
+    # Start the FastAPI app; Render injects $PORT, which app.py reads.
+    startCommand: "python app.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.6"
