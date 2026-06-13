@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+#
+# Start (or restart) the World Cup Oracle: the FastAPI app + the Cloudflare
+# named tunnel, so the site is live at https://worldcup.veristack.ca
+#
+# Usage:
+#   ./serve.sh start    start app + tunnel (default)
+#   ./serve.sh stop     stop both
+#   ./serve.sh status   show whether each is running
+#   ./serve.sh restart  stop then start
+#
+# The admin key gates editing live results. Change it here if you ever rotate it.
+
+set -uo pipefail
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$PROJECT_DIR"
+
+ADMIN_KEY="CHANGE_ME"   # owner key for Save/Clear live results
+PORT=8090
+LOG_DIR="$PROJECT_DIR/.logs"
+mkdir -p "$LOG_DIR"
+
+start_app() {
+  # Only start if nothing is already listening on the port.
+  if lsof -ti :$PORT >/dev/null 2>&1; then
+    echo "app: already running on :$PORT"
+  else
+    ADMIN_KEY="$ADMIN_KEY" nohup "$PROJECT_DIR/.venv/bin/python" app.py \
+      > "$LOG_DIR/app.log" 2>&1 &
+    echo "app: started on :$PORT"
+  fi
+}
+
+start_tunnel() {
+  # Only start if the named tunnel process is not already up.
+  if pgrep -f "cloudflared tunnel run worldcup-oracle" >/dev/null 2>&1; then
+    echo "tunnel: already running"
+  else
+    nohup cloudflared tunnel run worldcup-oracle \
+      > "$LOG_DIR/tunnel.log" 2>&1 &
+    echo "tunnel: started"
+  fi
+}
+
+stop_all() {
+  # Kill the app by port and the tunnel by name.
+  lsof -ti :$PORT 2>/dev/null | xargs kill -9 2>/dev/null && echo "app: stopped" || echo "app: not running"
+  pkill -f "cloudflared tunnel run worldcup-oracle" 2>/dev/null && echo "tunnel: stopped" || echo "tunnel: not running"
+}
+
+status() {
+  lsof -ti :$PORT >/dev/null 2>&1 && echo "app: UP (:$PORT)" || echo "app: DOWN"
+  pgrep -f "cloudflared tunnel run worldcup-oracle" >/dev/null 2>&1 && echo "tunnel: UP" || echo "tunnel: DOWN"
+  echo "URL: https://worldcup.veristack.ca"
+}
+
+case "${1:-start}" in
+  start)   start_app; start_tunnel; echo "Live at https://worldcup.veristack.ca" ;;
+  stop)    stop_all ;;
+  restart) stop_all; sleep 2; start_app; start_tunnel; echo "Restarted." ;;
+  status)  status ;;
+  *)       echo "Usage: ./serve.sh [start|stop|status|restart]" ;;
+esac
